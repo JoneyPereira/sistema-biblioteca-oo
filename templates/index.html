@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca</title>
+    <!-- Link para o Bootstrap 4 -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-5 text-center">Bem-vindo à Biblioteca</h1>
+        <p class="text-right"><a href="{{ url_for('logout') }}" class="btn btn-danger">Sair</a></p>
+        <h2>Lista de Livros</h2>
+        <ul class="list-group">
+            {% for livro in livros %}
+                <li class="list-group-item">
+                    <strong>{{ livro.titulo }}</strong> - {{ livro.autor }}
+                    {% if livro.disponivel %}
+                        <a href="{{ url_for('emprestar', livro_id=livro.id, usuario_id=usuario_id) }}" class="btn btn-success btn-sm float-right ml-2">Emprestar</a>
+                    {% else %}
+                        <span class="text-muted">Indisponível</span>
+                        {% for emprestimo in livro.emprestimos %}
+                            {% if not emprestimo.devolvido and emprestimo.usuario_id == usuario_id %}
+                                <a href="{{ url_for('devolver', emprestimo_id=emprestimo.id) }}" class="btn btn-warning btn-sm float-right">Devolver</a>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- Script do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
